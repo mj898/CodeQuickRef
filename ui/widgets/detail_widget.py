@@ -343,10 +343,15 @@ class DetailWidget(QWidget):
         return self._make_text_block('\n'.join(lines))
 
     def _connect_actions(self, item_data, item_type):
-        self._btn_fav.clicked.disconnect() if self._btn_fav.receivers(self._btn_fav.clicked) else None
-        self._btn_delete.clicked.disconnect() if self._btn_delete.receivers(self._btn_delete.clicked) else None
-        self._btn_copy.clicked.disconnect() if self._btn_copy.receivers(self._btn_copy.clicked) else None
-        self._btn_edit.clicked.disconnect() if self._btn_edit.receivers(self._btn_edit.clicked) else None
+        # 安全断开之前的连接（PySide6 兼容写法）
+        try: self._btn_fav.clicked.disconnect()
+        except (TypeError, RuntimeError): pass
+        try: self._btn_delete.clicked.disconnect()
+        except (TypeError, RuntimeError): pass
+        try: self._btn_copy.clicked.disconnect()
+        except (TypeError, RuntimeError): pass
+        try: self._btn_edit.clicked.disconnect()
+        except (TypeError, RuntimeError): pass
 
         self._btn_fav.clicked.connect(lambda: self._on_fav(item_data['id'], item_type))
         self._btn_delete.clicked.connect(lambda: self._on_delete(item_data['id'], item_type))
